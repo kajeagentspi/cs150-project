@@ -11,11 +11,20 @@ polyreg = function(){
                           multiple = FALSE,
                           accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")
                 ),
-                numericInput("polyregDegree", "Degree", 0)
+                numericInput("polyregDegree", "Degree", 1, min = 1),
+                numericInput("polyregEstimate", "Value to Estimate", 1, min = 1)
               ),
               mainPanel(
-                tableOutput("polyregInput"),
-                textOutput("polyregOutput")
+                fluidRow(
+                  column(2, tableOutput("polyregInput")),
+                  column(8, textOutput("polyregOutput"))
+                ),
+                fluidRow(
+                  plotOutput("polyregPlot")
+                ),
+                fluidRow(
+                  textOutput("polyregEstimateOutput")
+                )
               )
               
             )

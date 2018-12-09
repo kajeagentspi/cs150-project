@@ -5,7 +5,7 @@ polyreg = function(xyDataFrame, degree){
   augcoeff = generateAugCoeffMatrix(xyDataFrame["x"], xyDataFrame["y"], degree)
   result = gaussJordan(augcoeff$matrix, augcoeff$variables)
   fxstring = generateFxString(result$solutionSet, degree)
-  if(length(xyDataFrame["x"]) != length(xyDataFrame["x"])) return(NA)
+  if(length(xyDataFrame["x"]) != length(xyDataFrame["y"])) return(NA)
   if(degree > nrow(xyDataFrame)) return(NA)
   
   return(fxstring)

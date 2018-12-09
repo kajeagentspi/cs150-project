@@ -24,7 +24,7 @@ qsi = function(xyDataFrame){
     equationMatrix[currentLine, paste("a", as.character(iterator), sep = "")] = bounds[iterator, "lowerBounds"] ^ 2
     equationMatrix[currentLine, paste("b", as.character(iterator), sep = "")] = bounds[iterator, "lowerBounds"]
     equationMatrix[currentLine, paste("c", as.character(iterator), sep = "")] = 1
-    equationMatrix[currentLine, "RHS"] = if(currentLine == 1) 0 else xyDataFrame[iterator, "y"]
+    equationMatrix[currentLine, "RHS"] = xyDataFrame[iterator, "y"]
     currentLine = currentLine + 1
     equationMatrix[currentLine, paste("a", as.character(iterator), sep = "")] = bounds[iterator, "upperBounds"] ^ 2
     equationMatrix[currentLine, paste("b", as.character(iterator), sep = "")] = bounds[iterator, "upperBounds"]
@@ -33,7 +33,7 @@ qsi = function(xyDataFrame){
     currentLine = currentLine + 1
   }
   iterator = 1
-  for (bound in bounds[2:5, "lowerBounds"]) {
+  for (bound in bounds[2:numberOfFunctions, "lowerBounds"]) {
     equationMatrix[currentLine, paste("a", as.character(iterator), sep = "")] = bound * 2
     equationMatrix[currentLine, paste("b", as.character(iterator), sep = "")] = 1
     equationMatrix[currentLine, paste("a", as.character(iterator + 1), sep = "")] = bound * -2
@@ -42,7 +42,7 @@ qsi = function(xyDataFrame){
     currentLine = currentLine + 1
   }
   equationMatrix[currentLine, "a1"] = 1
-  
+  print(equationMatrix)
   gaussJordanResult = gaussJordan(equationMatrix, colNames[1:(numberOfFunctions * 3)])
   resultCoefficients = gaussJordanResult$matrix[,"RHS"]
   iterator = 1
@@ -55,11 +55,14 @@ qsi = function(xyDataFrame){
     fxList = append(fxList, fxstring)
     iterator = iterator + 3
   }
-  resultDataFrame = data.frame("Function" = fxList, "Lower Bound" = bounds[,"lowerBounds"], "Upper Bound" = bounds[,"upperBounds"])
+  resultDataFrame = data.frame("fx" = fxList, "lowerBound" = bounds[,"lowerBounds"], "upperBound" = bounds[,"upperBounds"], stringsAsFactors = FALSE)
   return(resultDataFrame)
 }
 
+
 # x = c(0, 10, 15, 20, 22.5, 30)
 # y = c(0, 227.04, 362.78, 517.35, 602.97, 901.67)
+# x = c(1,2,7)
+# y = c(5,11,32)
 # xyDataFrame = data.frame("x" = x, "y" = y)
 # print(qsi(xyDataFrame))

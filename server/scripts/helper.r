@@ -41,7 +41,7 @@ gaussJordanSolutionSet = function(variables, matrix){
 }
 
 # Polynomial Regression
-generateAugCoeffMatrix=function(independentVar, dependentVar, degree){
+generateAugCoeffMatrix=function(dependentVar, independentVar, degree){
   augcoeff = matrix(NaN, nrow = degree + 1, ncol = degree + 2)
   for (i in 1:(degree + 1)){
     if(i == 1){

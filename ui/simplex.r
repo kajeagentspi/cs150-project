@@ -1,9 +1,20 @@
 library(shinydashboard)
-
+library(rhandsontable)
 simplex <- function(){
   tabItem(tabName = "simplex",
-          fluidRow(
-            h2("simplex")
+          fluidPage(
+            titlePanel("Simplex"),
+            sidebarLayout(
+              sidebarPanel = NULL,
+              mainPanel = mainPanel(
+                fluidRow(
+                  rHandsontableOutput("computation")  
+                ),
+                fluidRow(
+                  rHandsontableOutput("shippingCost")
+                )
+              )
+            )
           )
   )
 }
