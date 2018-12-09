@@ -2,7 +2,7 @@ options(scipen=999)
 
 calculateSimplex = function(z, rhs){
   rowNames=c("S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "Z")
-  colNames=c("denverSacramento", "denverSaltLake", "denverAlbuquerque", "denverChicago", "denverNewYork", "phoneixSacramento", "phoneixSaltLake", "phoneixAlbuquerque", "phoneixChicago", "phoneixNewYork", "dallasSacramento", "dallasSaltLake", "dallasAlbuquerque", "dallasChicago", "dallasNewYork", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "Z", "RHS")
+  colNames=c("X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8", "X9", "X10", "X11", "X12", "X13", "X14", "X15", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "Z", "RHS")
   tempVec = c(-1,	0,	0,	0,	0,	-1,	0,	0,	0,	0,	-1,	0,	0,	0,	0,	1,	0, 0,	0,	0,	0,	0,	0,	0,	-190,
               0,	-1,	0,	0,	0,	0,	-1,	0,	0,	0,	0,	-1,	0,	0,	0,	0,	1,	0,	0,	0,	0,	0,	0,	0, -220,
               0,	0,	-1,	0,	0,	0,	0,	-1,	0,	0,	0,	0,	-1,	0,	0,	0,	0,	1,	0,	0,	0,	0,	0,	0,	-250,
@@ -29,6 +29,7 @@ endCondition = function(vectorX){
 simplex=function(simplexMatrix){
   colCount = ncol(simplexMatrix)
   rowCount = nrow(simplexMatrix)
+  
   iterations = list()
   iterations = lappend(iterations, simplexMatrix)
   while (!endCondition(simplexMatrix[1:(rowCount - 1), colCount])) {

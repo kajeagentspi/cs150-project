@@ -43,8 +43,8 @@ computation = data.frame(
 
 rownames(computation) = plants
 
-server = function(input, output) {
-  values = reactiveValues(computation = computation, shippingCost = shippingCost)
+server = function(input, output, session) {
+  values = reactiveValues(computation = computation, shippingCost = shippingCost, iterations = c())
 
   output$qsiInput = renderTable({
     req(input$qsiFile)
@@ -72,7 +72,7 @@ server = function(input, output) {
       plot(xyFrame[,"x"], xyFrame[,"y"], xlab = "x", ylab = "y", xlim = c(minX, maxX))
       for (row in 1:nrow(result)) {
         fx = eval(parse(text = result[row, "fx"]))
-        lines(result[row, "lowerBound"]:result[row, "upperBound"], fx(result[row, "lowerBound"]:result[row, "upperBound"]), type = "l", col = "red")
+        lines(result[row, "lowerBound"]:result[row, "upperBound"], fx(result[row, "lowerBound"]:result[row, "upperBound"]), type = "l", col = rgb(runif(5),runif(5),runif(5)) )
       }
     })
     output$qsiEstimateOutput = renderText({
@@ -82,7 +82,7 @@ server = function(input, output) {
         for (row in 1:nrow(result)) {
           if(result[row, "lowerBound"] <= input$qsiEstimate  && input$qsiEstimate <= result[row, "upperBound"]){
             fx = eval(parse(text = result[row, "fx"]))
-            return(toString(fx(input$qsiEstimate)))
+            return(paste("Estimated Output:", toString(fx(input$qsiEstimate))))
           }
         }
       }
@@ -110,7 +110,7 @@ server = function(input, output) {
         return(NA)
       }
       return(fxstring)
-      })
+    })
     sorting = order(xyFrame[,"x"])
     sortedX = xyFrame[,"x"][sorting]
     minX = sortedX[1]
@@ -130,7 +130,7 @@ server = function(input, output) {
       if(input$polyregEstimate > maxX || input$polyregEstimate < minX){
         return("Out of bounds")
       }else{
-        return(toString(fx(input$polyregEstimate)))
+        return(paste("Estimated Output:", toString(fx(input$polyregEstimate))))
       }
     })
     return(xyFrame)
@@ -176,7 +176,20 @@ server = function(input, output) {
     values$shippingCost["Shipping", "Chicago"] = values$shippingCost[1:3, "Chicago"] %*% values$computation[1:3, "Chicago"]
     values$shippingCost["Shipping", "NewYork"] = values$shippingCost[1:3, "NewYork"] %*% values$computation[1:3, "NewYork"]
     values$shippingCost["Shipping", "Supply"] = sum(values$shippingCost[5, 2:6])
+    values$iterations = simplexOut$iterations
+    updateSelectInput(session, "tableau",
+                      label = "Select Iteration",
+                      choices = c("HIDE", c(1:length(simplexOut$iterations)))
+    )
     rhandsontable(values$shippingCost, width = 600) %>%
       hot_row(c(4, 5), readOnly = TRUE)
+  })
+  
+  output$iterationTable = renderPrint({
+    if(input$tableau == "HIDE"){
+      return(NA)
+    }else{
+      return(values$iterations[[as.integer(input$tableau)]])
+    }
   })
 }

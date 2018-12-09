@@ -12,6 +12,16 @@ simplex <- function(){
                 ),
                 fluidRow(
                   rHandsontableOutput("shippingCost")
+                ),
+                fluidRow(
+                  selectInput("tableau", "Select Iteration", c("HIDE"))
+                ),
+                fluidRow(
+                  conditionalPanel(
+                    condition = "input.tableau != 'HIDE'",
+                    verbatimTextOutput("iterationTable")  
+                  )
+                  
                 )
               )
             )
